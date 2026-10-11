@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الأردن | عرض تقديمي صوتي + تسجيل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#ce1126;--green:#007a3d;--gold:#d4a857;--bg:#0d0f16}
+html,body{height:100%}
+body{font-family:'Cairo','Segoe UI',Tahoma,sans-serif;background:var(--bg);color:#fff;overflow:hidden}
+
+#progress{position:fixed;top:0;right:0;height:4px;width:10%;background:linear-gradient(270deg,var(--red),var(--gold));z-index:100;transition:width .5s ease}
+
+.deck{position:relative;width:100%;height:100vh;height:100dvh}
+.slide{position:absolute;inset:0;display:flex;padding:80px 7% 130px;overflow-y:auto;text-align:center;
+  background:
+   radial-gradient(900px 520px at 88% -12%, var(--g1,transparent), transparent 62%),
+   radial-gradient(820px 520px at 8% 112%, var(--g2,transparent), transparent 62%),
+   var(--bg);
+  opacity:0;visibility:hidden;transform:translateY(34px) scale(.985);
+  transition:opacity .7s ease,transform .7s ease,visibility 0s linear .7s}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .7s ease,transform .7s ease,visibility 0s linear 0s}
+.inner{margin:auto;display:flex;flex-direction:column;align-items:center;width:100%;max-width:1000px}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease var(--d,0s),transform .65s ease var(--d,0s)}
+.slide.active .reveal{opacity:1;transform:none}
+
+.s-title{--g1:rgba(206,17,38,.40);--g2:rgba(0,122,61,.30);--ac:#ce1126}
+.s-facts{--g1:rgba(91,124,250,.35);--g2:rgba(30,70,140,.30);--ac:#5b7cfa}
+.s-amman{--g1:rgba(212,168,87,.35);--g2:rgba(150,110,50,.25);--ac:#d4a857}
+.s-petra{--g1:rgba(226,114,91,.40);--g2:rgba(140,60,60,.32);--ac:#e2725b}
+.s-rum{--g1:rgba(224,122,47,.42);--g2:rgba(120,60,140,.30);--ac:#e07a2f}
+.s-deadsea{--g1:rgba(29,138,153,.42);--g2:rgba(20,90,140,.30);--ac:#1d8a99}
+.s-jerash{--g1:rgba(158,164,120,.32);--g2:rgba(90,100,70,.26);--ac:#9ea478}
+.s-food{--g1:rgba(200,90,50,.40);--g2:rgba(150,50,60,.32);--ac:#c85a32}
+.s-culture{--g1:rgba(0,150,80,.38);--g2:rgba(0,90,60,.32);--ac:#0aa05c}
+.s-thanks{--g1:rgba(206,17,38,.42);--g2:rgba(0,122,61,.34);--ac:#ce1126}
+
+.tag{display:inline-block;padding:7px 20px;border-radius:999px;background:var(--ac);font-size:.95rem;font-weight:600;margin-bottom:20px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.slide-title{font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;line-height:1.35}
+.sub{margin-top:10px;font-size:clamp(1rem,2.4vw,1.25rem);opacity:.8;font-weight:400}
+.big-emoji{font-size:clamp(3rem,7vw,4.5rem);animation:float 4.5s ease-in-out infinite;filter:drop-shadow(0 12px 24px rgba(0,0,0,.35));margin-bottom:6px}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:920px;margin-top:32px;width:100%}
+.card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:20px 14px;transition:.3s;backdrop-filter:blur(4px)}
+.card:hover{transform:translateY(-5px);background:rgba(255,255,255,.1);border-color:var(--ac)}
+.card .icon{font-size:1.9rem;display:block;margin-bottom:6px}
+.card small{display:block;opacity:.7;font-size:.9rem;margin-bottom:2px}
+.card b{font-size:1.05rem}
+
+.points{display:flex;flex-direction:column;gap:13px;max-width:780px;margin-top:28px;width:100%}
+.point{display:flex;align-items:flex-start;gap:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 18px;text-align:right;transition:.3s}
+.point:hover{background:rgba(255,255,255,.09);transform:translateX(-6px)}
+.point span{font-size:1.35rem;line-height:1.5}
+.point p{font-size:1.05rem;line-height:1.8;opacity:.92}
+
+.flag{position:relative;width:190px;height:127px;border-radius:14px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);margin-bottom:28px}
+.flag .band{width:100%;height:calc(100%/3)}
+.flag .b1{background:#151515}.flag .b2{background:#f4f4f4}.flag .b3{background:var(--green)}
+.flag .chevron{position:absolute;top:0;right:0;width:40%;height:100%;background:var(--red);clip-path:polygon(100% 0,0 50%,100% 100%)}
+.flag .star{position:absolute;top:50%;right:20%;transform:translate(50%,-50%);color:#fff;font-size:1.6rem;text-shadow:0 2px 6px rgba(0,0,0,.3)}
+
+.s-title h1{font-size:clamp(4rem,12vw,7.5rem);font-weight:900;line-height:1.15;background:linear-gradient(180deg,#fff 30%,#ffc9c9);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.s-title .subtitle{font-size:clamp(1.1rem,3vw,1.6rem);opacity:.9;margin-top:4px}
+.s-title .tag{margin-top:24px}
+.start-btn{margin-top:16px;padding:14px 42px;font-size:1.15rem;font-weight:700;font-family:inherit;color:#fff;background:linear-gradient(135deg,var(--red),#e84a5f);border:none;border-radius:999px;cursor:pointer;transition:.3s;box-shadow:0 10px 30px rgba(206,17,38,.4)}
+.start-btn:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 16px 40px rgba(206,17,38,.55)}
+.start-btn.green{background:linear-gradient(135deg,#0aa05c,#22c55e);box-shadow:0 10px 30px rgba(10,160,92,.4)}
+.start-btn.green:hover{box-shadow:0 16px 40px rgba(10,160,92,.55)}
+.start-btn.ghost{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.3);box-shadow:none;font-size:1.02rem;padding:12px 34px}
+.start-btn.ghost:hover{background:rgba(255,255,255,.16);box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.hint{margin-top:16px;font-size:.9rem;opacity:.55}
+.restart{margin-top:26px;padding:12px 36px;font-family:inherit;font-size:1.05rem;font-weight:700;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);border-radius:999px;cursor:pointer;transition:.3s}
+.restart:hover{background:var(--red);border-color:transparent;transform:translateY(-3px)}
+
+.top-bar{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;z-index:90;pointer-events:none}
+.brand{font-weight:700;font-size:.95rem;opacity:.75}
+.top-tools{display:flex;align-items:center;gap:10px;pointer-events:auto}
+.counter{font-size:.95rem;opacity:.85;background:rgba(255,255,255,.07);padding:6px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12)}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:1.05rem;cursor:pointer;transition:.25s}
+.icon-btn:hover{background:rgba(255,255,255,.15)}
+.icon-btn.on{border-color:rgba(10,160,92,.7);background:rgba(10,160,92,.2)}
+.icon-btn.auto-on{border-color:#d4a857;background:rgba(212,168,87,.25);animation:pulseGold 1.4s infinite}
+@keyframes pulseGold{0%,100%{box-shadow:0 0 0 0 rgba(212,168,87,.5)}50%{box-shadow:0 0 0 9px rgba(212,168,87,0)}}
+.icon-btn.talking{border-color:#0aa05c;background:rgba(10,160,92,.3);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(10,160,92,.5)}50%{box-shadow:0 0 0 9px rgba(10,160,92,0)}}
+/* زر التسجيل */
+#recBtn.rec-on{border-color:#e63946;background:rgba(230,57,70,.3);animation:pulseRed 1.2s infinite}
+@keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,.55)}50%{box-shadow:0 0 0 9px rgba(230,57,70,0)}}
+
+.bottom-bar{position:fixed;bottom:20px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:18px;z-index:90}
+.nav-btn{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#fff;font-size:1.25rem;cursor:pointer;transition:.25s;backdrop-filter:blur(6px)}
+.nav-btn:hover{background:var(--red);border-color:transparent;transform:translateY(-4px)}
+#dots{display:flex;gap:8px}
+.dot{width:9px;height:9px;border-radius:99px;border:none;background:rgba(255,255,255,.28);cursor:pointer;transition:.35s;padding:0}
+.dot.on{width:30px;background:var(--red)}
+
+/* ===== لوحة الإعدادات ===== */
+.tts-panel{position:fixed;top:64px;left:16px;z-index:96;background:rgba(13,15,22,.94);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:16px;width:min(320px,calc(100vw - 32px));backdrop-filter:blur(10px);transform:translateY(-12px);opacity:0;visibility:hidden;transition:.3s;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.tts-panel.open{opacity:1;visibility:visible;transform:none}
+.tts-panel h4{margin-bottom:12px;font-size:1rem}
+.tts-row{margin-bottom:13px;text-align:right}
+.tts-row label{font-size:.85rem;opacity:.85;display:block;margin-bottom:6px}
+.tts-row select{width:100%;padding:8px 10px;border-radius:10px;background:#1a1e2a;color:#fff;border:1px solid rgba(255,255,255,.2);font-family:inherit;font-size:.88rem}
+.tts-row input[type=range]{width:100%;accent-color:#0aa05c}
+.tts-row.chk{display:flex;align-items:center;gap:8px}
+.tts-row.chk label{margin:0;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:.88rem}
+.tts-row.chk input{width:17px;height:17px;accent-color:#d4a857;cursor:pointer}
+.tts-btn{width:100%;padding:10px;font-family:inherit;font-size:.95rem;font-weight:700;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:10px;cursor:pointer;transition:.25s}
+.tts-btn:hover{background:#0aa05c;border-color:transparent}
+.tts-note{font-size:.78rem;opacity:.6;line-height:1.7;margin-top:10px;text-align:right}
+
+/* ===== مؤشرات الحالة ===== */
+#statusChips{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:95;flex-wrap:wrap;justify-content:center}
+.chip{display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:999px;font-size:.9rem;font-weight:700;opacity:0;visibility:hidden;transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.chip.show{opacity:1;visibility:visible}
+#autoChip{background:rgba(180,110,20,.94)}
+#speakingChip{background:rgba(10,160,92,.92)}
+#recChip{background:rgba(230,57,70,.94);font-variant-numeric:tabular-nums}
+.chip .pd{width:8px;height:8px;border-radius:50%;background:#fff;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+@media(max-width:720px){
+  .cards{grid-template-columns:repeat(2,1fr);gap:12px}
+  .card{padding:16px 10px}
+  .point p{font-size:.98rem}
+  .slide{padding:70px 6% 120px}
+  .nav-btn{width:46px;height:46px}
+  .brand{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div class="top-bar">
+  <div class="brand">✨ عرض تقديمي — الأردن</div>
+  <div class="top-tools">
+    <div class="counter"><span id="cur">1</span> / <span id="total">10</span></div>
+    <button class="icon-btn" id="recBtn" title="تسجيل الشاشة (R)">⏺</button>
+    <button class="icon-btn" id="soundBtn" title="تشغيل / إيقاف التعليق الصوتي (M)">🔇</button>
+    <button class="icon-btn" id="autoBtn" title="تشغيل تلقائي (P)">▶️</button>
+    <button class="icon-btn" id="gearBtn" title="إعدادات الصوت">⚙️</button>
+    <button class="icon-btn" onclick="toggleFS()" title="ملء الشاشة">⛶</button>
+  </div>
+</div>
+
+<!-- لوحة الإعدادات -->
+<div class="tts-panel" id="ttsPanel">
+  <h4>🎙️ الإعدادات</h4>
+  <div class="tts-row">
+    <label>اختيار الصوت</label>
+    <select id="voiceSel"></select>
+  </div>
+  <div class="tts-row">
+    <label>سرعة القراءة: <span id="rateVal">0.95×</span></label>
+    <input type="range" id="rateInput" min="0.6" max="1.4" step="0.05" value="0.95">
+  </div>
+  <div class="tts-row chk">
+    <label><input type="checkbox" id="loopChk"> 🔁 إعادة العرض من الأول تلقائياً</label>
+  </div>
+  <button class="tts-btn" id="pauseBtn">⏸ إيقاف مؤقت</button>
+  <p class="tts-note">💡 نصيحة للتسجيل: عشان صوت التعليق يظهر في الفيديو، اختار "الشاشة بالكامل" وفعّل خيار "مشاركة صوت النظام" في نافذة المتصفح.</p>
+</div>
+
+<!-- مؤشرات الحالة -->
+<div id="statusChips">
+  <div class="chip" id="recChip"><span class="pd"></span> REC <span id="recTime">00:00</span></div>
+  <div class="chip" id="autoChip">⏩ تشغيل تلقائي</div>
+  <div class="chip" id="speakingChip"><span class="pd"></span> جاري القراءة...</div>
+</div>
+
+<div class="deck">
+
+  <!-- 1) العنوان -->
+  <section class="slide s-title active">
+    <div class="inner">
+      <div class="flag reveal" style="--d:.1s"><div class="band b1"></div><div class="band b2"></div><div class="band b3"></div><div class="chevron"></div><div class="star">★</div></div>
+      <h1 class="reveal" style="--d:.25s">الأردن</h1>
+      <p class="subtitle reveal" style="--d:.4s">بلد التاريخ العريق... وأرض العجائب ✨</p>
+      <span class="tag reveal" style="--d:.55s">المملكة الأردنية الهاشمية</span>
+      <div class="reveal" style="--d:.7s;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+        <button class="start-btn" onclick="startShow(false)">ابدأ العرض ←</button>
+        <button class="start-btn green" onclick="startShow(true)">🔊 ابدأ مع التعليق الصوتي</button>
+        <button class="start-btn ghost" onclick="startAuto()">▶️ تشغيل تلقائي كامل</button>
+      </div>
+      <p class="hint reveal" style="--d:.9s">الأسهم أو السحب للتنقل • M للصوت • P للتشغيل التلقائي • R للتسجيل 🎬</p>
+    </div>
+  </section>
+
+  <!-- 2) بطاقة تعريف -->
+  <section class="slide s-facts">
+    <div class="inner">
+      <span class="tag reveal" style="--d:.1s">📌 نبدأ ببساطة</span>
+      <h2 class="slide-title reveal" style="--d:.2s">بطاقة تعريف</h2>
+      <div class="cards">
+        <div class="card reveal" style="--d:.3s"><span class="icon">🏙️</span><small>العاصمة</small><b>عمّان</b></div>
+        <div class="card reveal" style="--d:.4s"><span class="icon">👥</span><small>عدد السكان</small><b>حوالي 11.5 مليون</b></div>
+        <div class="card reveal" style="--d:.5s"><span class="icon">📐</span><small>المساحة</small><b>89,342 كم²</b></div>
+        <div class="card reveal" style="--d:.6s"><span class="icon">🗣️</span><small>اللغة الرسمية</small><b>العربية</b></div>
+        <div class="card reveal" style="--d:.7s"><span class="icon">💵</span><small>العملة</small><b>الدينار الأردني</b></div>
+        <div class="card reveal" style="--d:.8s"><span class="icon">👑</span><small>نظام الحكم</small><b>ملكي دستوري</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3) عمّان -->
+  <section class="slide s-amman">
+    <div class="inner">
+      <div class="reveal" style="--d:.05s"><div class="big-emoji">🏙️</div></div>
+      <span class="tag reveal" style="--d:.15s">العاصمة</span>
+      <h2 class="slide-title reveal" style="--d:.25s">عمّان — مدينة الجبال</h2>
+      <div class="points">
+        <div class="point reveal" style="--d:.4s"><span>⏳</span><p>من أقدم مدن العالم المأهولة؛ كانت عاصمة العمونيين منذ آلاف السنين</p></div>
+        <div class="point reveal" style="--d:.55s"><span>🏛️</span><p>جبل القلعة والمدرج الروماني من أشهر معالمها الأثرية العريقة</p></div>
+        <div class="point reveal" style="--d:.7s"><span>🌆</span><p>تجمع بين الأصالة والحداثة: أسواق قديمة وأحياء عصرية مثل العبدلي</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4) البتراء -->
+  <section class="slide s-petra">
+    <div class="inner">
+      <div class="reveal" style="--d:.05s"><div class="big-emoji">🏛️</div></div>
+      <span class="tag reveal" style="--d:.15s">🏆 إحدى عجائب الدنيا السبع الجديدة</span>
+      <h2 class="slide-title reveal" style="--d:.25s">البتراء — المدينة الوردية</h2>
+      <div class="points">
+        <div class="point reveal" style="--d:.4s"><span>🗿</span><p>عاصمة مملكة الأنباط، منحوتة في الصخر الوردي قبل أكثر من 2000 عام</p></div>
+        <div class="point reveal" style="--d:.55s"><span>🚶</span><p>تُدخل إليها عبر "السيق": شعاب ضيق يبلغ ارتفاع جدرانه حوالي 80 متراً</p></div>
+        <div class="point reveal" style="--d:.7s"><span>💎</span><p>أشهر معالمها: الخزنة، الدير، المدرج، والقبور الملكية</p></div>
+        <div class="point reveal" style="--d:.85s"><span>🌍</span><p>على قائمة التراث العالمي لليونسكو (1985) وعجائب الدنيا السبع (2007)</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5) وادي رم -->
+  <section class="slide s-rum">
+    <div class="inner">
+      <div class="reveal" style="--d:.05s"><div class="big-emoji">🏜️</div></div>
+      <span class="tag reveal" style="--d:.15s">🌙 وادي القمر</span>
+      <h2 class="slide-title reveal" style="--d:.25s">وادي رم</h2>
+      <div class="points">
+        <div class="point reveal" style="--d:.4s"><span>🗺️</span><p>أكبر محمية طبيعية في الأردن، تشتهر برمالها الحمراء وجبالها الشاهقة</p></div>
+        <div class="point reveal" style="--d:.55s"><span>🎬</span><p>صُوِّرت فيه أفلام عالمية مثل: لورنس العرب، The Martian، و Dune</p></div>
+        <div class="point reveal" style="--d:.7s"><span>⭐</span><p>من أفضل أماكن العالم لمشاهدة النجوم والتخييم البدوي</p></div>
+        <div class="point reveal" style="--d:.85s"><span>🐪</span><p>تجارب ركوب الجمال وسيارات الصحراء ومغامرات لا تُنسى</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6) البحر الميت -->
+  <section class="slide s-deadsea">
+    <div class="inner">
+      <div class="reveal" style="--d:.05s"><div class="big-emoji">🌊</div></div>
+      <span class="tag reveal" style="--d:.15s">📉 أخفض بقعة على سطح الأرض</span>
+      <h2 class="slide-title reveal" style="--d:.25s">البحر الميت</h2>
+      <div class="points">
+        <div class="point reveal" style="--d:.4s"><span>⬇️</span><p>يقع حوالي 430 متراً تحت سطح البحر — أخفض نقطة على سطح اليابسة</p></div>
+        <div class="point reveal" style="--d:.55s"><span>🏊</span><p>ملوحته الشديدة تسمح بالطفو بسهولة... حتى بدون بذل أي مجهود!</p></div>
+        <div class="point reveal" style="--d:.7s"><span>🧪</span><p>مياهه وطينه غنيان بالمعادن، ويُستخدمان في العلاجات ومستحضرات التجميل</p></div>
+        <div class="point reveal" style="--d:.85s"><span>🌅</span><p>شروقه وغروبه من أجمل المشاهد الطبيعية في المنطقة</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7) جرش -->
+  <section class="slide s-jerash">
+    <div class="inner">
+      <div class="reveal" style="--d:.05s"><div class="big-emoji">🏟️</div></div>
+      <span class="tag reveal" style="--d:.15s">🏛️ بومبي الشرق</span>
+      <h2 class="slide-title reveal" style="--d:.25s">جرش — جوهرة الرومان</h2>
+      <div class="points">
+        <div class="point reveal" style="--d:.4s"><span>🏺</span><p>من أفضل المدن الرومانية حفظاً واكتمالاً خارج إيطاليا</p></div>
+        <div class="point reveal" style="--d:.55s"><span>🏟️</span><p>أبرز معالمها: المضمار البيضاوي، ساحة النافورة، شارع الأعمدة، وقوس هادريان</p></div>
+        <div class="point reveal" style="--d:.7s"><span>🎭</span><p>تُقام فيها سنوياً مهرجانات جرش للثقافة والفنون على مسرحها الروماني</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8) المطبخ -->
+  <section class="slide s-food">
+    <div class="inner">
+      <div class="reveal" style="--d:.05s"><div class="big-emoji">🍽️</div></div>
+      <span class="tag reveal" style="--d:.15s">المائدة الأردنية</span>
+      <h2 class="slide-title reveal" style="--d:.25s">الأكل الأردني... حكاية</h2>
+      <div class="points">
+        <div class="point reveal" style="--d:.4s"><span>🍖</span><p>المنسف: الطبق الوطني — لحم الضأن مع اللبن (الجميد) والأرز وخبز الشراك</p></div>
+        <div class="point reveal" style="--d:.55s"><span>🧀</span><p>الكنافة النابلسية بالجبنة والقطر... حلا لا يُقاوم</p></div>
+        <div class="point reveal" style="--d:.7s"><span>🫒</span><p>زيت الزيتون البلدي، الزعتر، والحمص بالطحينة</p></div>
+        <div class="point reveal" style="--d:.85s"><span>☕</span><p>الشاي بالنعناع والقهوة العربية السادة رمز الكرم</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9) الثقافة -->
+  <section class="slide s-culture">
+    <div class="inner">
+      <div class="reveal" style="--d:.05s"><div class="big-emoji">🤝</div></div>
+      <span class="tag reveal" style="--d:.15s">الهوية الأردنية</span>
+      <h2 class="slide-title reveal" style="--d:.25s">كرم الضيافة والفخر</h2>
+      <div class="points">
+        <div class="point reveal" style="--d:.4s"><span>🏠</span><p>الأردنيون معروفون بحبهم للضيافة واستقبال الضيوف قادمةً كانوا أو غرباء</p></div>
+        <div class="point reveal" style="--d:.55s"><span>☕</span><p>القهوة العربية والبدوية رمز للترحيب والتكريم في المجتمع الأردني</p></div>
+        <div class="point reveal" style="--d:.7s"><span>💃</span><p>الدبكة والفنون الشعبية جزء أساسي من الأعراس والاحتفالات</p></div>
+        <div class="point reveal" style="--d:.85s"><span>🕊️</span><p>أرض استقرار وسلام، احتضنت الحضارات: العمونيين، الأنباط، الرومان، والأمويون</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10) الخاتمة -->
+  <section class="slide s-thanks">
+    <div class="inner">
+      <div class="flag reveal" style="--d:.1s"><div class="band b1"></div><div class="band b2"></div><div class="band b3"></div><div class="chevron"></div><div class="star">★</div></div>
+      <h2 class="slide-title reveal" style="--d:.3s">شكراً لحسن استماعكم! 🙏</h2>
+      <p class="sub reveal" style="--d:.45s">الأردن ليس مجرد وجهة سياحية... إنه تجربة تسرق القلوب ❤️</p>
+      <span class="tag reveal" style="--d:.6s">هل لديكم أسئلة؟ 👀</span>
+      <button class="restart reveal" style="--d:.75s" onclick="go(0)">🔁 إعادة العرض</button>
+    </div>
+  </section>
+
+</div>
+
+<div class="bottom-bar">
+  <button class="nav-btn" id="prevBtn" title="السابق">→</button>
+  <div id="dots"></div>
+  <button class="nav-btn" id="nextBtn" title="التالي">←</button>
+</div>
+
+<script>
+/* ================= التنقل ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+
+slides.forEach((_,i)=>{
+  const b=document.createElement('button');
+  b.className='dot';
+  b.addEventListener('click',()=>{go(i);b.blur()});
+  dotsBox.appendChild(b);
+});
+const dots=[...dotsBox.children];
+document.getElementById('total').textContent=slides.length;
+
+function go(i,force=false){
+  if(i<0||i>=slides.length)return;
+  if(i===cur&&!force)return;
+  slides[cur].classList.remove('active');
+  dots[cur].classList.remove('on');
+  cur=i;
+  slides[cur].classList.add('active');
+  dots[cur].classList.add('on');
+  slides[cur].scrollTop=0;
+  updateUI();
+  if(autoOn)afterChange();
+  else if(narrationOn)speak(scripts[cur]);
+}
+function updateUI(){
+  document.getElementById('progress').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('cur').textContent=cur+1;
+}
+function next(){go(cur+1)}
+function prev(){go(cur-1)}
+document.getElementById('nextBtn').onclick=e=>{next();e.currentTarget.blur()};
+document.getElementById('prevBtn').onclick=e=>{prev();e.currentTarget.blur()};
+dots[0].classList.add('on');updateUI();
+
+document.addEventListener('keydown',e=>{
+  if(['ArrowLeft','PageDown',' '].includes(e.key)){e.preventDefault();next()}
+  else if(['ArrowRight','PageUp'].includes(e.key)){e.preventDefault();prev()}
+  else if(e.key==='Home')go(0);
+  else if(e.key==='End')go(slides.length-1);
+  else if(e.key==='f'||e.key==='F')toggleFS();
+  else if(e.key==='m'||e.key==='M')toggleNarration();
+  else if(e.key==='p'||e.key==='P')toggleAuto();
+  else if(e.key==='r'||e.key==='R')toggleRec();   // 👈 تسجيل الشاشة
+});
+
+let sx=0,sy=0;
+document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){dx>0?next():prev()}
+},{passive:true});
+
+function toggleFS(){
+  document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{});
+}
+
+/* ================= التعليق الصوتي 🎙️ ================= */
+const scripts=[
+/* 1 */ "أهلاً وسهلاً بكم في هذا العرض التقديمي عن المملكة الأردنية الهاشمية. لنتعرف معاً على هذا البلد الجميل وأهم معالمه.",
+/* 2 */ "بطاقة تعريف الأردن. العاصمة هي عمان. عدد السكان حوالي أحد عشر مليوناً ونصف. والمساحة ثمانية وثمانون ألفاً وثلاثمئة واثنان وأربعون كيلومتراً مربعاً. اللغة الرسمية هي العربية، والعملة هو الدينار الأردني، ونظام الحكم ملكي دستوري.",
+/* 3 */ "عمان، مدينة الجبال وعاصمة المملكة. تعد من أقدم مدن العالم المأهولة، وكانت عاصمة العمونيين منذ آلاف السنين. من أشهر معالمها جبل القلعة والمدرج الروماني. وتجمع المدينة بين الأصالة والحداثة.",
+/* 4 */ "البتراء، المدينة الوردية، وإحدى عجائب الدنيا السبع الجديدة. كانت عاصمة مملكة الأنباط، ومنحوتة في الصخر الوردي قبل أكثر من ألفي عام. يدخلها الزوار عبر السيق، وهو شعاب ضيق ترتفع جدرانه حوالي ثمانين متراً. ومن أشهر معالمها الخزنة والدير والقبور الملكية. وهي مدرجة على قائمة التراث العالمي لليونسكو.",
+/* 5 */ "وادي رم، المعروف بوادي القمر. وهو أكبر محمية طبيعية في الأردن، تشتهر برمالها الحمراء وجبالها الشاهقة. صورت فيه أفلام عالمية شهيرة، وهو من أفضل الأماكن في العالم لمشاهدة النجوم والتخييم البدوي.",
+/* 6 */ "البحر الميت، أخفض بقعة على سطح الأرض. يقع حوالي أربعمئة وثلاثين متراً تحت سطح البحر. ملوحته الشديدة تسمح بالطفو بسهولة دون أي مجهود. ومياهه وطينه غنيان بالمعادن المفيدة للعلاج ومستحضرات التجميل.",
+/* 7 */ "جرش، المعروفة ببومبي الشرق. وهي من أفضل المدن الرومانية حفظاً واكتمالاً خارج إيطاليا. من أبرز معالمها المضمار البيضاوي وشارع الأعمدة وقوس هادريان. وتقام فيها سنوياً مهرجانات جرش للثقافة والفنون.",
+/* 8 */ "المطبخ الأردني غني ولذيذ. المنسف هو الطبق الوطني، وهو لحم الضأن مع اللبن والأرز وخبز الشراك. ومن أشهر الأطباق أيضاً الكنافة النابلسية، والحمص بالطحينة، وزيت الزيتون البلدي. والقهوة العربية السادة رمز للكرم والضيافة.",
+/* 9 */ "الأردنيون معروفون بحبهم للضيافة والكرم. القهوة العربية والبدوية رمز للترحيب والتكريم. والدبكة من أشهر الفنون الشعبية في الأعراس والاحتفالات. وقد احتضن الأردن عبر التاريخ حضارات عديدة، من العمونيين والأنباط، إلى الرومان والأمويين.",
+/* 10 */ "وهكذا نصل إلى نهاية عرضنا. شكراً لحسن استماعكم، ونتمنى أن تكونوا قد استمتعتم بمعرفة المزيد عن الأردن. هل لديكم أي أسئلة؟"
+];
+
+const soundBtn=document.getElementById('soundBtn');
+const autoBtn=document.getElementById('autoBtn');
+const gearBtn=document.getElementById('gearBtn');
+const ttsPanel=document.getElementById('ttsPanel');
+const voiceSel=document.getElementById('voiceSel');
+const rateInput=document.getElementById('rateInput');
+const rateVal=document.getElementById('rateVal');
+const pauseBtn=document.getElementById('pauseBtn');
+const loopChk=document.getElementById('loopChk');
+const speakingChip=document.getElementById('speakingChip');
+const autoChip=document.getElementById('autoChip');
+
+let narrationOn=localStorage.getItem('jb-tts')==='1';
+let rate=parseFloat(localStorage.getItem('jb-rate'))||0.95;
+let loopOn=localStorage.getItem('jb-loop')==='1';
+let utterToken=0,safetyT=null;
+rateInput.value=rate;rateVal.textContent=rate+'×';
+loopChk.checked=loopOn;
+
+const ttsOK=('speechSynthesis' in window);
+
+function populateVoices(){
+  if(!ttsOK)return;
+  const vs=speechSynthesis.getVoices();
+  if(!vs.length)return;
+  const ar=vs.filter(v=>/^ar/i.test(v.lang));
+  const list=ar.length?ar:vs;
+  voiceSel.innerHTML='';
+  list.forEach(v=>{
+    const o=document.createElement('option');
+    o.value=v.voiceURI;
+    o.textContent=(/^ar/i.test(v.lang)?'🇯🇴 ':'')+v.name+' ('+v.lang+')';
+    voiceSel.appendChild(o);
+  });
+  if(!ar.length){
+    const note=document.createElement('option');
+    note.disabled=true;note.textContent='⚠️ لا يوجد صوت عربي مثبت على جهازك';
+    voiceSel.prepend(note);
+  }
+  const saved=localStorage.getItem('jb-voice');
+  if(saved&&[...voiceSel.options].some(o=>o.value===saved))voiceSel.value=saved;
+}
+if(ttsOK){
+  populateVoices();
+  speechSynthesis.onvoiceschanged=populateVoices;
+}else{
+  soundBtn.disabled=true;soundBtn.style.opacity=.4;
+  soundBtn.title='المتصفح لا يدعم النطق';
+}
+
+function currentVoice(){
+  const vs=speechSynthesis.getVoices();
+  return vs.find(v=>v.voiceURI===voiceSel.value)||vs.find(v=>/^ar/i.test(v.lang))||null;
+}
+function setSpeaking(b){
+  speakingChip.classList.toggle('show',b);
+  soundBtn.classList.toggle('talking',b);
+}
+
+function speak(text,onDone){
+  if(!ttsOK)return;
+  utterToken++;
+  const my=utterToken;
+  speechSynthesis.cancel();
+  clearTimeout(safetyT);
+  pauseBtn.textContent='⏸ إيقاف مؤقت';
+  const finish=()=>{
+    if(my!==utterToken)return;
+    clearTimeout(safetyT);
+    setSpeaking(false);
+    if(onDone)onDone();
+  };
+  const voice=currentVoice();
+  const chunks=text.match(/[^.!?؟]+[.!?؟]*/g)||[text];
+  chunks.forEach((c,idx)=>{
+    const u=new SpeechSynthesisUtterance(c.trim());
+    u.lang=voice?voice.lang:'ar-SA';
+    if(voice)u.voice=voice;
+    u.rate=rate;u.pitch=1;
+    if(idx===0)u.onstart=()=>{if(my===utterToken)setSpeaking(true)};
+    if(idx===chunks.length-1){u.onend=finish;u.onerror=finish}
+    speechSynthesis.speak(u);
+  });
+  safetyT=setTimeout(finish,text.split(/\s+/).length*520/rate+5000);
+}
+
+/* ================= التشغيل التلقائي ⏩ ================= */
+let autoOn=false,autoTimer=null;
+
+function afterChange(){
+  if(!autoOn)return;
+  clearTimeout(autoTimer);
+  const advance=()=>{
+    if(!autoOn)return;
+    if(cur<slides.length-1)next();
+    else if(loopOn)go(0);
+    else stopAuto();
+  };
+  if(ttsOK&&narrationOn){
+    speak(scripts[cur],()=>{autoTimer=setTimeout(advance,1600)});
+  }else{
+    if(ttsOK){utterToken++;speechSynthesis.cancel();setSpeaking(false)}
+    autoTimer=setTimeout(advance,9000);
+  }
+}
+
+function syncAutoUI(){
+  autoBtn.textContent=autoOn?'⏸':'▶️';
+  autoBtn.classList.toggle('auto-on',autoOn);
+  autoBtn.title=autoOn?'إيقاف التشغيل التلقائي (P)':'تشغيل تلقائي (P)';
+  autoChip.classList.toggle('show',autoOn);
+}
+function startAuto(){
+  autoOn=true;syncAutoUI();
+  if(cur===slides.length-1)go(0);else go(cur,true);
+}
+function stopAuto(){
+  autoOn=false;clearTimeout(autoTimer);syncAutoUI();
+  if(ttsOK){utterToken++;speechSynthesis.cancel()}
+  setSpeaking(false);
+}
+function toggleAuto(){autoOn?stopAuto():startAuto()}
+autoBtn.onclick=()=>{toggleAuto();autoBtn.blur()};
+
+function syncSoundUI(){
+  soundBtn.textContent=narrationOn?'🔊':'🔇';
+  soundBtn.classList.toggle('on',narrationOn);
+}
+function toggleNarration(force){
+  if(!ttsOK)return;
+  narrationOn=(force!==undefined)?force:!narrationOn;
+  localStorage.setItem('jb-tts',narrationOn?'1':'0');
+  syncSoundUI();
+  if(autoOn)afterChange();
+  else if(narrationOn)speak(scripts[cur]);
+  else{utterToken++;speechSynthesis.cancel();setSpeaking(false)}
+}
+function startShow(voice){
+  narrationOn=voice;
+  localStorage.setItem('jb-tts',voice?'1':'0');
+  syncSoundUI();
+  go(1);
+}
+
+soundBtn.onclick=()=>toggleNarration();
+gearBtn.onclick=()=>ttsPanel.classList.toggle('open');
+
+pauseBtn.onclick=()=>{
+  if(!ttsOK)return;
+  if(speechSynthesis.paused){
+    speechSynthesis.resume();pauseBtn.textContent='⏸ إيقاف مؤقت';
+    if(autoOn&&!narrationOn)afterChange();
+  }else{
+    speechSynthesis.pause();pauseBtn.textContent='▶️ متابعة';
+    if(autoOn)clearTimeout(autoTimer);
+  }
+};
+
+rateInput.oninput=()=>{rate=parseFloat(rateInput.value);rateVal.textContent=rate+'×'};
+rateInput.onchange=()=>{
+  localStorage.setItem('jb-rate',rate);
+  if(autoOn)afterChange();
+  else if(narrationOn&&!speechSynthesis.paused)speak(scripts[cur]);
+};
+voiceSel.onchange=()=>{
+  localStorage.setItem('jb-voice',voiceSel.value);
+  if(autoOn)afterChange();
+  else if(narrationOn&&!speechSynthesis.paused)speak(scripts[cur]);
+};
+loopChk.onchange=()=>{loopOn=loopChk.checked;localStorage.setItem('jb-loop',loopOn?'1':'0')};
+
+/* ================= تسجيل الشاشة ⏺ ================= */
+const recBtn=document.getElementById('recBtn');
+const recChip=document.getElementById('recChip');
+const recTime=document.getElementById('recTime');
+let recStream=null,recorder=null,recChunks=[],recTimer=null,recSeconds=0;
+
+const recSupported=!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia&&window.MediaRecorder);
+if(!recSupported){
+  recBtn.disabled=true;recBtn.style.opacity=.4;
+  recBtn.title='التسجيل غير مدعوم في هذا المتصفح — استخدم Chrome أو Edge';
+}
+
+function fmtTime(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+
+async function startRec(){
+  try{
+    // المتصفح هيسألك تسجل إيه: شاشة كاملة / نافذة / التاب الحالي
+    recStream=await navigator.mediaDevices.getDisplayMedia({
+      video:{frameRate:30},
+      audio:true
+    });
+  }catch(e){return} // المستخدم ألغى الاختيار
+
+  let mime='video/webm;codecs=vp9';
+  if(!MediaRecorder.isTypeSupported(mime))mime='video/webm;codecs=vp8';
+  if(!MediaRecorder.isTypeSupported(mime))mime='video/webm';
+
+  recChunks=[];
+  recorder=new MediaRecorder(recStream,{mimeType:mime,videoBitsPerSecond:6000000});
+  recorder.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data)};
+  recorder.onstop=saveRec;
+
+  // لو المستخدم ضغط "إيقاف المشاركة" من شريط المتصفح نفسه
+  recStream.getVideoTracks()[0].addEventListener('ended',stopRec);
+
+  recorder.start(1000);
+  recSeconds=0;recTime.textContent='00:00';
+  recBtn.textContent='⏹';recBtn.classList.add('rec-on');
+  recBtn.title='إيقاف التسجيل وحفظ الفيديو (R)';
+  recChip.classList.add('show');
+  recTimer=setInterval(()=>{recSeconds++;recTime.textContent=fmtTime(recSeconds)},1000);
+}
+
+function stopRec(){
+  if(recorder&&recorder.state!=='inactive')recorder.stop();
+  if(recStream){recStream.getTracks().forEach(t=>t.stop());recStream=null}
+  clearInterval(recTimer);
+  recBtn.textContent='⏺';recBtn.classList.remove('rec-on');
+  recBtn.title='تسجيل الشاشة (R)';
+  recChip.classList.remove('show');
+}
+
+function saveRec(){
+  if(!recChunks.length)return;
+  const blob=new Blob(recChunks,{type:'video/webm'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const d=new Date(),p=n=>String(n).padStart(2,'0');
+  a.href=url;
+  a.download=`عرض-الأردن-${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}_${p(d.getHours())}-${p(d.getMinutes())}.webm`;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),5000);
+}
+
+function toggleRec(){
+  if(!recSupported)return;
+  (recorder&&recorder.state==='recording')?stopRec():startRec();
+}
+recBtn.onclick=()=>{toggleRec();recBtn.blur()};
+
+syncSoundUI();syncAutoUI();
+</script>
+</body>
+</html>
